@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { initSessionAsync } from "../../redux/actions/companionAction";
+import { initSessionAsync } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
    
@@ -53,6 +53,9 @@ export default function Create() {
                         labelProps={{
                             className: "before:content-none after:content-none",
                         }}
+                        containerProps={{
+                            className: "bg-[#fff] rounded-md"
+                        }}
                     />
                     <Typography variant="h6" color="blue-gray" className="-mb-3">
                         Descriptions
@@ -66,6 +69,9 @@ export default function Create() {
                         className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                         labelProps={{
                             className: "before:content-none after:content-none",
+                        }}
+                        containerProps={{
+                            className: "bg-[#fff] rounded-md"
                         }}
                     />
                     

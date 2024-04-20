@@ -5,7 +5,6 @@ const companionSlice = createSlice({
     initialState: {
         name: "",
         description: "",
-        transcript: "",
         summary: "",
         loading: false,
         // For current session useage
@@ -22,6 +21,10 @@ const companionSlice = createSlice({
         },
         initSessionFailure(state) {
             state.loading = false;
+        },
+        clearName(state) {
+            state.loading = false;
+            state.name = "";
         }
     }
 })
@@ -29,6 +32,7 @@ const companionSlice = createSlice({
 export const {
     start,
     initSessionSuccess,
-    initSessionFailure
+    initSessionFailure,
+    clearName
 } = companionSlice.actions;
 export default companionSlice.reducer;

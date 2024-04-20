@@ -18,10 +18,10 @@ function App() {
     <div className="h-screen">
       <NavBar />
       <Routes>
-        <Route path="/" element={AuthGuard(user, loading, <Home />)} />
-        <Route path="/archive" element={AuthGuard(user, loading, <Archive />)} />
-        <Route path="/companion/:sessionName" element={AuthGuard(user, loading, <Companion />)} />
-        <Route path="/practice" element={AuthGuard(user, loading, <Practice />)} />
+        <Route path="/" element={<Home />} />
+        <Route path="/archive" element={<Archive />} />
+        <Route path="/companion/:sessionName" element={<Companion />} />
+        <Route path="/practice" element={<Practice />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
       </Routes>

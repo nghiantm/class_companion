@@ -9,7 +9,7 @@ export default function Home() {
                 <DefaultSidebar />
             </Grid>
 
-            <Grid item xs={9} className="flex justify-center items-center">
+            <Grid item xs={9} className="flex justify-center items-center bg-[#f0f0f0]">
                 <Create />
             </Grid>
         </Grid>

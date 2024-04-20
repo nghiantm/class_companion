@@ -1,5 +1,7 @@
-import { createSession, getAllSessions } from "../../apis/apiClient";
-import { initSessionFailure, initSessionSuccess, start } from "../slices/companionSlice";
+import { createSession, getAllSessions } from "../apis/apiClient";
+import { initSessionFailure, initSessionSuccess, start } from "./slices/companionSlice";
+import { failure, getAllSessionsSuccess, startArchive } from "./slices/archiveSlice";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const initSessionAsync = (
     email,
@@ -18,11 +20,11 @@ export const initSessionAsync = (
 
 export const getAllSessionsAsync = (email) => async (dispatch) => {
     try {
-        console.log(1);
-        dispatch(start());
+        dispatch(startArchive());
         const data = await getAllSessions(email);
-        console.log(data);
+        dispatch(getAllSessionsSuccess(data));
     } catch (err) {
+        dispatch(failure());
         alert(err);
     }
 }

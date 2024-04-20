@@ -1,14 +1,18 @@
 import clsx from "clsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
+import { useDispatch } from "react-redux";
+import { clearName } from "../../redux/slices/companionSlice";
 
 function CompanionBar(  ) {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const pathname = location.pathname;
 
     const handleBack = () => {
         if (pathname.startsWith("/companion/")) {
+            dispatch(clearName());
             navigate("/");
         }
     }
