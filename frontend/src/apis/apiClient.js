@@ -18,3 +18,13 @@ export const createSession = (
             throw err;
         })
 }
+
+export const getAllSessions = (email) => {
+    return myAxios.get(`/sessions?email=${email}`)
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            throw err;
+        })
+}
