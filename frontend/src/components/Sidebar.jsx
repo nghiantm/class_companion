@@ -31,7 +31,7 @@ export function DefaultSidebar() {
     }
 
     return (
-        <Card className="h-screen w-full p-4 shadow-xl shadow-blue-gray-900/5 bg-[#007348] rounded-none">
+        <Card className="h-screen sticky w-full p-4 shadow-xl shadow-blue-gray-900/5 bg-[#007348] rounded-none">
         <div className="mb-2 p-4">
             <Typography variant="h5" color="white" className="font-logo">
             Class Companion
@@ -56,16 +56,6 @@ export function DefaultSidebar() {
                     <SmartToyOutlinedIcon className="h-5 w-5"/>
                 </ListItemPrefix>
                 Session's Archive
-            </ListItem>
-
-            <ListItem 
-                className={`${isPractice ? 'bg-[#ffffff]' : 'text-[#ffffff]'}`}
-                onClick={() => navigate("/practice")}
-            >
-                <ListItemPrefix>
-                    <ModelTrainingIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                Practice
             </ListItem>
             
             <ListItem

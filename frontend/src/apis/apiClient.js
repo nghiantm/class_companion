@@ -28,3 +28,29 @@ export const getAllSessions = (email) => {
             throw err;
         })
 }
+
+export const generateResponse = (message) => {
+    const body = {
+        messages: [message]
+    }
+    return myAxios.post(`/generate_response`, body)
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const generateSummary = (message) => {
+    const body = {
+        messages: [message]
+    }
+    return myAxios.post(`/summarize`, body)
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            throw err;
+        })
+}

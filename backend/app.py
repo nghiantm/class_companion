@@ -40,7 +40,6 @@ def get_sessions():
         return jsonify(documents), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
 
 @app.route("/sessions", methods=["POST"])
 def post_session():
@@ -51,14 +50,13 @@ def post_session():
         # Extract optional fields
         desc = data.get("description", "")
         summary = data.get("summary", "")
-        transcript = data.get("transcript", "")
+        #transcript = data.get("transcript", "")
 
         data = {
             "email": email,
             "name": name,
             "description": desc,
             "summary": summary,
-            "transcript": transcript
         }
         query = { "email": email, "name": name }
         update_operation = {"$set": data}
@@ -78,6 +76,29 @@ def generate_response():
             messages=messages,
             #response_format={"type": "json_object", "schema": User.model_json_schema()},
             temperature=1,
+            model="NousResearch/Nous-Hermes-2-Yi-34B"
+            #model="mistralai/Mixtral-8x7B-v0.1"
+        )
+
+        responseJSON = {
+            "role": response.choices[0].message.role,
+            "content": response.choices[0].message.content
+        }
+
+        return jsonify(responseJSON), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/summarize", methods=["POST"])
+def summarize():
+    try:
+        data = request.get_json()
+        messages = data["messages"]
+
+        response = together_client.chat.completions.create(
+            messages=messages,
+            #response_format={"type": "json_object", "schema": User.model_json_schema()},
+            temperature=0.2,
             model="NousResearch/Nous-Hermes-2-Yi-34B"
             #model="mistralai/Mixtral-8x7B-v0.1"
         )

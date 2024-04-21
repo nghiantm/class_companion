@@ -3,24 +3,30 @@ import { Grid, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
-import SummarizeIcon from '@mui/icons-material/Summarize';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import CheckIcon from '@mui/icons-material/Check';
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { generateQuestionAsync, generateSummaryAsync } from "../redux/actions";
+import { clearQuestions, clearSummary } from "../redux/slices/companionSlice";
+import { demoText } from "../utils/prompt";
 
 export default function Companion() {
     const { sessionName } = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const description = useSelector((state) => state.companion.description);
+    const questions = useSelector((state) => state.companion.questions);
+    const summary = useSelector((state) => state.companion.summary);
+    const questionLoading = useSelector((state) => state.companion.questionLoading);
+    const summaryLoading = useSelector((state) => state.companion.summaryLoading);
+
     const [transcription, setTranscription] = useState('');
-    const questions = useSelector((state) => state.companion.questions)
     const [openSubmit, setOpen] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpen = () => setOpen(!openSubmit);
-    const handleOpenDelete = () => {
-        setOpenDelete(!openDelete);
-        console.log("click");
-    }
+    const handleOpenDelete = () => setOpenDelete(!openDelete);
 
     const {
         transcript,
@@ -59,17 +65,28 @@ export default function Companion() {
 
     const handleSubmit = () => {
         handleOpen();
-        console.log("SUBMITED")
+        // TODO
+        navigate("/archive");
     }
 
     const handleReset = () => {
         handleStopListening();
         setTranscription("");
+        dispatch(clearQuestions());
+        dispatch(clearSummary());
         handleOpenDelete();
     }
 
-    const test = () => {
-        
+    const handleIdea = () => {
+        dispatch(generateQuestionAsync(transcript));
+        dispatch(generateSummaryAsync(transcript));
+    }
+
+    const handleDemo = () => {
+        handleStopListening();
+        setTranscription("");
+        dispatch(clearQuestions());
+        setTranscription(demoText());
     }
 
     return (
@@ -81,7 +98,9 @@ export default function Companion() {
                     disabled
                     variant="static"
                     placeholder="Awaiting questions"
-                    value={transcription}
+                    value={
+                        questionLoading ? "Loading" : questions
+                    }
                     fullWidth
                     className="text-[#000] rounded-xl p-4 text-[#000000] text-xl"
                 />
@@ -94,7 +113,9 @@ export default function Companion() {
                     disabled
                     variant="static"
                     placeholder="Awaiting summary"
-                    value={transcription}
+                    value={
+                        summaryLoading ? "Loading" : summary
+                    }
                     fullWidth
                     className="text-[#000] rounded-xl p-4 text-[#000000] text-xl"
                 />
@@ -113,8 +134,8 @@ export default function Companion() {
                 >
                     <KeyboardVoiceIcon/>
                 </Button>
-                <Button onClick={handleOpen} className="rounded-xl">
-                    <CheckIcon />
+                <Button className="rounded-xl bg-[#007348]" onClick={handleIdea}>
+                    <TipsAndUpdatesIcon />
                 </Button>
 
                 <Dialog open={openSubmit} handler={handleOpen}>
@@ -158,13 +179,25 @@ export default function Companion() {
             </Grid>
 
             <Grid item xs={12} md={6}>
-                <Typography className="pt-8 pl-4 text-lg font-bold">
-                    Session's Name: <span className="text-[#007348]">{sessionName}</span>
-                </Typography>
+                <div className="pt-8 pl-4 spa">
+                    <Typography className="text-lg font-bold">
+                        Session's Name: <span className="text-[#007348]">{sessionName}</span>
+                    </Typography>
 
-                <Typography className="pl-4 text-lg font-bold">
-                    Description: <span className="text-[#007348]">{description}</span>
-                </Typography>
+                    <Typography className="text-lg font-bold">
+                        Description: <span className="text-[#007348]">{description}</span>
+                    </Typography>
+
+                    <div className="flex justify-between">
+                        <Button onClick={handleOpen} className="mt-4 w-36 h-12 rounded-xl bg-[#c95438]">
+                            End lesson
+                        </Button>
+
+                        <Button onClick={handleDemo} className="mt-4 w-24 h-12 rounded-xl">
+                            Demo
+                        </Button>
+                    </div>
+                </div>
             </Grid>
         </Grid>
     )
