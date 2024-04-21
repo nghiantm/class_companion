@@ -1,7 +1,7 @@
-import { createSession, generateResponse, generateSummary, getAllSessions } from "../apis/apiClient";
-import { companionFailure, generateQuestionFailure, generateQuestionSuccess, generateSummaryFailure, generateSummarySuccess, initSessionFailure, initSessionSuccess, questionStart, start, summaryStart } from "./slices/companionSlice";
-import { failure, getAllSessionsSuccess, startArchive } from "./slices/archiveSlice";
-import { questionPrompt, summaryPrompt } from "../utils/prompt";
+import { createSession, generateResponse, generateSummary, getAllSessions, getSession } from "../apis/apiClient";
+import { generateQuestionFailure, generateQuestionSuccess, generateSummaryFailure, generateSummarySuccess, initSessionFailure, initSessionSuccess, questionStart, start, summaryStart } from "./slices/companionSlice";
+import { failure, generateQuizFailure, generateQuizSuccess, getAllSessionsSuccess, getSummaryFailure, getSummarySuccess, startArchive, startQuiz, startSummaryDialog } from "./slices/archiveSlice";
+import { quizPrompt, questionPrompt, summaryPrompt } from "../utils/prompt";
 
 export const initSessionAsync = (
     email,
@@ -52,10 +52,35 @@ export const generateSummaryAsync = (transcript) => async (dispatch) => {
         };
         dispatch(summaryStart());
         const data = await generateSummary(message);
-        console.log(data);
         dispatch(generateSummarySuccess(data.content))
     } catch (err) {
         dispatch(generateSummaryFailure());
+        alert(err);
+    }
+}
+
+export const generateQuizAsync = (transcript) => async (dispatch) => {
+    try {
+        const message = {
+            "role": "system",
+            "content": quizPrompt(transcript)
+        };
+        dispatch(startQuiz());
+        const data = await generateSummary(message);
+        dispatch(generateQuizSuccess(data.content));
+    } catch (err) {
+        dispatch(generateQuizFailure());
+        alert(err);
+    }
+}
+
+export const getSessionAsync = (email, name, description) => async (dispatch) => {
+    try {
+        dispatch(startSummaryDialog());
+        const data = await getSession(email, name, description);
+        dispatch(getSummarySuccess(data));
+    } catch (err) {
+        dispatch(getSummaryFailure());
         alert(err);
     }
 }

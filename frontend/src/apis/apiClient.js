@@ -19,8 +19,45 @@ export const createSession = (
         })
 }
 
+export const updateSession = (
+    email,
+    name,
+    description,
+    summary,
+    transcript
+) => {
+    const body = {
+        "email": email,
+        "name": name,
+        "description": description,
+        "summary": summary,
+        "transcript": transcript
+    }
+    return myAxios.post(`/sessions`, body)
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            throw err;
+        })
+}
+
 export const getAllSessions = (email) => {
     return myAxios.get(`/sessions?email=${email}`)
+        .then((res) => {
+            return res.data;
+        })
+        .catch((err) => {
+            throw err;
+        })
+}
+
+export const getSession = (
+    email,
+    name,
+    description
+) => {
+    return myAxios.get(`/session?email=${email}&name=${name}&description=${description}`)
         .then((res) => {
             return res.data;
         })

@@ -1,17 +1,26 @@
 import { Grid } from "@mui/material";
 import { DefaultSidebar } from "../components/Sidebar";
-import { useEffect } from "react";
-import { getAllSessionsAsync } from "../redux/actions";
+import { useEffect, useState } from "react";
+import { generateQuizAsync, getAllSessionsAsync } from "../redux/actions";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import MyLoading from "../components/MyLoading";
 import ArchiveCard from "../components/Archive/ArchiveCard";
+import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, Textarea, Typography } from "@material-tailwind/react";
 
 export default function Archive() {
     const [user, loading, error] = useAuthState(auth);
     const sessions = useSelector((state) => state.archive.sessions);
+    const name = useSelector((state) => state.archive.name);
+    const summary = useSelector((state) => state.archive.summary);
+    const transcript = useSelector((state) => state.archive.transcript);
+    const summaryLoading = useSelector((state) => state.archive.summaryLoading);
+    const quizLoading = useSelector((state) => state.archive.quizLoading);
+    const quiz = useSelector((state) => state.archive.quiz);
     const dispatch = useDispatch();
+    const [openSummary, setOpenSummary] = useState(false);
+    const handleOpen = () => setOpenSummary(!openSummary);
 
     useEffect(() => {
         if (user) {
@@ -19,7 +28,13 @@ export default function Archive() {
         }
     }, [user])
 
-    return sessions.length ? (
+    useEffect(() => {
+        if (transcript && name) {
+            dispatch(generateQuizAsync(transcript))
+        }
+    }, [name])
+
+    return sessions && sessions.length ? (
         <Grid container>
             <Grid item xs={3}>
                 <DefaultSidebar />
@@ -38,11 +53,60 @@ export default function Archive() {
                                         ? (session.description)
                                         : (session.description.substring(0, 55) + "...")
                                 }
+                                handleSummaryClick={handleOpen}
+                                email={user.email}
                             />
                         )
                     })
                 }
                 </div>
+
+                <Dialog size="xl" className="max-h-5/6" open={openSummary} handler={handleOpen} >
+                    <DialogHeader>Session's Name: {name}</DialogHeader>
+                    <DialogBody>
+                        {
+                            summaryLoading && quizLoading
+                                ? <MyLoading />
+                                : (
+                                    <Grid container spacing={4}>
+                                        <Grid item xs={6}>
+                                            <Typography className="font-bold text-lg">Summary</Typography>
+                                            <Textarea 
+                                                rows={12}
+                                                disabled
+                                                value={summary}
+                                                className="rounded-xl text-[#000000] text-xl"
+                                            />
+
+                                            <Typography className="font-bold text-lg">Transcript</Typography>
+                                            <Textarea 
+                                                rows={4}
+                                                disabled
+                                                value={transcript}
+                                                className="rounded-xl text-[#000000] text-xl"
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                            <Typography className="font-bold text-lg">Some questions to consider</Typography>
+                                            {
+                                                quiz ? (
+                                                    <Typography className="mt-2 whitespace-pre-line text-lg text-[#000]">
+                                                        {quiz}
+                                                    </Typography>
+                                                ) : <MyLoading />
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                )
+                        }
+                    </DialogBody>
+                    <DialogFooter>
+                        <Button onClick={handleOpen}>
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </Dialog>
             </Grid>
         </Grid>
     ) : (

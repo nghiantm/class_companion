@@ -8,10 +8,14 @@ import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { generateQuestionAsync, generateSummaryAsync } from "../redux/actions";
-import { clearQuestions, clearSummary } from "../redux/slices/companionSlice";
+import { clearName, clearQuestions, clearSummary } from "../redux/slices/companionSlice";
 import { demoText } from "../utils/prompt";
+import { updateSession } from "../apis/apiClient";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
 
 export default function Companion() {
+    const [user, loading, error] = useAuthState(auth);
     const { sessionName } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -63,9 +67,20 @@ export default function Companion() {
         });
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        await updateSession(
+            user.email,
+            sessionName,
+            description,
+            summary,
+            transcription
+        )
         handleOpen();
-        // TODO
+        handleStopListening();
+        setTranscription("");
+        dispatch(clearQuestions());
+        dispatch(clearSummary());
+        dispatch(clearName());
         navigate("/archive");
     }
 
@@ -78,14 +93,15 @@ export default function Companion() {
     }
 
     const handleIdea = () => {
-        dispatch(generateQuestionAsync(transcript));
-        dispatch(generateSummaryAsync(transcript));
+        dispatch(generateQuestionAsync(transcription));
+        dispatch(generateSummaryAsync(transcription));
     }
 
     const handleDemo = () => {
         handleStopListening();
         setTranscription("");
         dispatch(clearQuestions());
+        dispatch(clearSummary());
         setTranscription(demoText());
     }
 
