@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MyLoading from "../components/MyLoading";
 import ArchiveCard from "../components/Archive/ArchiveCard";
 import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, Textarea, Typography } from "@material-tailwind/react";
+import TopBanner from "../components/TopBanner";
 
 export default function Archive() {
     const [user, loading, error] = useAuthState(auth);
@@ -110,14 +111,29 @@ export default function Archive() {
             </Grid>
         </Grid>
     ) : (
-        <Grid container>
-            <Grid item xs={3}>
-                <DefaultSidebar />
-            </Grid>
+        <>
+            {
+                sessions && sessions.length === 0 ? (
+                    <Grid container>
+                        <Grid item xs={3}>
+                            <DefaultSidebar />
+                        </Grid>
 
-            <Grid item xs={9}>
-                <MyLoading />
-            </Grid>
-        </Grid>
+                        <Grid item xs={9}>
+                            <Typography className="text-2xl font-bold mt-4">No sessions found!</Typography>
+                        </Grid>
+                    </Grid>
+                ) : (
+                    <Grid container>
+                        <Grid item xs={3}>
+                            <DefaultSidebar />
+                        </Grid>
+
+                        <Grid item xs={9}>
+                            <MyLoading />
+                        </Grid>
+                    </Grid>
+                )}
+        </>
     )
 }

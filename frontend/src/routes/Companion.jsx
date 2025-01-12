@@ -118,7 +118,7 @@ export default function Companion() {
                         questionLoading ? "Loading" : questions
                     }
                     fullWidth
-                    className="text-[#000] rounded-xl p-4 text-[#000000] text-xl"
+                    className="text-[#000] rounded-xl p-4 text-[#000000] text-xl bg-[#F7F8FD]"
                 />
             </Grid>
 
@@ -146,7 +146,7 @@ export default function Companion() {
                 </Button>
                 <Button
                     onClick={listening ? handlePauseListening : handleStartListening}
-                    className={`${listening ? 'bg-red-500' : ''} rounded-xl`}
+                    className={`${listening ? 'bg-red-500' : 'bg-[#4F46E5]'} rounded-xl`}
                 >
                     <KeyboardVoiceIcon/>
                 </Button>
@@ -209,7 +209,7 @@ export default function Companion() {
                             End lesson
                         </Button>
 
-                        <Button onClick={handleDemo} className="mt-4 w-24 h-12 rounded-xl">
+                        <Button onClick={handleDemo} className="mt-4 w-24 h-12 rounded-xl bg-[#4F46E5]">
                             Demo
                         </Button>
                     </div>

@@ -11,6 +11,10 @@ export default withMT({
     extend: {
       fontFamily: {
         logo: ["Black Han Sans", "sans-serif"],
+        mont: ["Montserrat", "sans-serif"],
+      },
+      backgroundImage: {
+        "sign_in_art": "url('/src/assets/sign_in_art.jpg')"
       }
     },
   },

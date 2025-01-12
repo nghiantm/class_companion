@@ -33,7 +33,7 @@ export const logInWithEmailAndPassword = async (email, password) => {
       
     })
     .catch((err) => {
-      console.log(err);
+      alert(err.message);
     })
 }
 
@@ -43,7 +43,7 @@ export const registerWithEmailAndPassword = async (email, password) => {
 
     })
     .catch((err) => {
-      console.log(err);
+      alert(err.message);
     })
 }
 

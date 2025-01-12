@@ -20,22 +20,22 @@ function CompanionBar(  ) {
     return (
         <div
             className={clsx(
-                "sticky w-screen flex justify-between items-center px-8 h-16 bg-[#007348]"
+                "sticky w-screen flex justify-between items-center px-8 h-16 bg-[#080325]"
             )}
         >
             <div className="grow">
                 <Button 
                     onClick={handleBack}
-                    className="bg-[#c99c39]"
+                    className="bg-[#4F46E5]"
                 >
                     Back
                 </Button>
             </div>
 
             <p className={clsx(
-                "font-logo mt-1 text-xl text-[#ffffff]"
+                "font-inter italic mt-1 text-xl text-[#ffffff]"
             )}>
-                Class Companion
+                Study Buddy
             </p>
         </div>
     )
